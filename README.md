@@ -1,2 +1,2 @@
 # week-2
-Week 2 starting code
+Week 2 completed code
