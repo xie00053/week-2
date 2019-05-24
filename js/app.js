@@ -1,46 +1,55 @@
 var app = new Vue({
     el: '#app',
     data: {
-        name: 'Cruiser',
-        brand: 'Iron Horse',
-        description: 'True to its name, the Iron Horse Cruiser is an <i>experience and expression of freedom</i>.',
-        features: [ '1200CC Air-cooled Evolution Engine', 'Closed loop exhaust system', 'Chrome Details',],
-        specs: {
-                engine: '1200cc',
-                torque: '99 NM',                
-                weight: '255 kg',
-                Other: ['Two tone colour','Fog Lamps','Alloy Wheels']                              
+      name: 'Cruiser',
+      brand: 'Iron Horse',
+      description: 'True to its name, the Iron Horse Cruiser is an <i>experience and expression of freedom</i>.',
+      features: ['1200CC Air-cooled Evolution Engine', 'Closed loop exhaust system', 'Chrome Details'],
+      specs: {
+        engine: '1200cc',
+        torque: '99 NM',
+        weight: '255 kg',
+        other: ['Two tone colour', 'Fog lamps', 'Alloy Wheels']
+      },
+      variations: [
+        {
+          color: 'red',
+          quantity: 10,
+          image: './img/motorcycle-red.jpg'
         },
-        cart: 0,
-        selecteVariation: 0,
-        tabs:['Features', 'Specs'],
-        variations: [
-            {
-                color: 'red',
-                quantity:10,
-                image: './img/motorcycle-red.jpg'
-            },
-            {
-                color: 'blue',
-                quantity:3,
-                image: './img/motorcycle-blue.jpg'
-            },
-        ],
-        
-    },
-    computed: {
-        title: function() {
-            return this.brand + ' - ' + this.name
-        },
-        image: function() {
-            return this.variations[this.selecteVariation].image
+        {
+          color: 'blue',
+          quantity: 3,
+          image: './img/motorcycle-blue.jpg'
         }
+      ],
+      cart: 0,
+      selectedVariation: 0,
+      redBtn: {backgroundColor: 'red'},
+      tabs: ['Features', 'Specs','Comments'],
+      selectedTab: 'Features',
+      yourName: null,
+      yourComment: null,
+      Comments:[],
+      erros:[], 
     },
     methods: {
-        updateProduct: function (index) {
-            this.selecteVariation = index
-            console.log (this.selecteVariation)
-        }
+      updateProduct: function (index) {
+        this.selectedVariation = index
+        console.log(this.selectedVariation)
+      },
+      commentSubmit: function (event) {
+        event.preventDefault()
+        console.log(this.yourName + ':' + this.yourComment)
+      }
     },
-
-})
+    computed: {
+      title: function () {
+        return this.brand + ' - ' + this.name
+      },
+      image: function () {
+        return this.variations[this.selectedVariation].image
+      }
+    }
+  })
+  

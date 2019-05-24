@@ -11,48 +11,84 @@
 <body>
   <div class="container" id="app">
     <nav class="navbar navbar-light bg-light">
-        {{title}}
-        <div class="badge badge-secondary">Cart({{cart}})</div>
+        {{ title }}
+        <div class="badge badge-secondary">Cart({{ cart }})</div>
     </nav>
     <div class="row">
       <div class="col-sm-6">
-        <img class="img-fluid" v-bind:src="image" alt="Red Motorcycle Illustration ">
+        <img class="img-fluid" :src="image" alt="Red Motorcycle Illustration ">
       </div>
       <div class="col-sm-6">
-        <h1>{{name}}</h1>
-        <p>{{brand}}</p>
+        <h1>{{ name }}</h1>
+        <p>{{ brand }}</p>
+        <!-- 当string里包含text和 html 时，使用v-html 比如： True to its name, the Iron Horse Cruiser is an <i>experience and expression of freedom</i>.-->
         <p class="lead" v-html="description"></p>
-        <p :style="variations[selecteVariation].quantity < 5 ? {color: 'red'} : '' "> 
-          InStock {{variations[selecteVariation].quantity}} 
-        <span v-show="variations[selecteVariation].quantity < 5">(Almost Sold Out)</span>
+        <!-- 添加 Style 的方式 3: 缩写模式。“ ？”相当于“ function () {} ”大括号里的内容。“ ：” 相当与 else if{}。后面的 ‘’ 相当于 大括号里的内容  
+            这行代码的意思是： 如果(？) *** 小于5 成立， 那么颜色是 red, 否则（ ：）显示‘某些内容，或者可以是空白信息’。 -->
+        <p :style="variations[selectedVariation].quantity < 5 ? {color: 'red' } : '' ">
+          InStock {{variations[selectedVariation].quantity}}
+
+          <span v-show="variations[selectedVariation].quantity < 5">(Almost Sold Out)</span>
         </p>
+        
         <div>
           <h2>Colours Available</h2>
-          <span class="color-box"
-            v-for="(variation, index) in variations" :key="index" :class="variation.color" v-on:mouseover="updateProduct(index)"></span>
+          <span class="color-box" v-for="(variation, index) in variations" :key="index" v-bind:class="variation.color" v-on:mouseover="updateProduct(index)"></span>
         </div>
-        <button v-on:click="cart++">Add to Cart</button>
-        <button v-on:click="cart--">Remove from Cart</button>      
+        <!-- 添加 style 给 Btn 的方式 1：直接添加值 -->
+        <button v-on:click="cart++" :style="{backgroundColor: 'green'}">Add to Cart</button>
+        <!-- 添加 style 给 Btn 的方式 2； redBtn 的值写在 Vue 里-->
+        <button @click="cart--" :style="redBtn">Remove from Cart</button>
       </div>
       <div class="col-sm-12">
-          <section>
+        <!-- :class 里先要check是不是符合条件，所以大括号里的内容是显示active的特性，如果选择的是当前的tab -->
+        <span 
+          v-for="(tab, index) in tabs" 
+          :key="index" 
+          @click="selectedTab = tab" 
+          class="tab"
+          :class="{active: selectedTab === tab}"
+          >
+            {{ tab }}
+        </span>
+          <section v-show="selectedTab === 'Features'">
               <h2>Features</h2>
               <ul>
-                <li v-for="feature in features">{{feature}}</li>
+                <li v-for="feature in features">{{ feature }}</li>
               </ul>
             </section>
-            <section>
+            <section v-show="selectedTab === 'Specs'">
               <h2>Specs</h2>
+              <!-- value 和 key 的位置不能变，这里的 key 相当于 index -->
               <dl v-for="(value, key) in specs">
-                <dt>{{key}}</dt>
-                <dd v-if= "Array.isArray(value)">
+                <dt>{{ key }}</dt>
+                <!-- 检查是一个 value 还是一个 array -->
+                <dd v-if="Array.isArray(value)">
                   <ul>
-                    <!-- <li v-for="item in value">{{item}}</li> -->
-                    <li v-for="(item, index) in value" :key="index">{{item}}</li>
+                    <li v-for="(item, index) in value" :key="index">{{ item }}</li>
                   </ul>
                 </dd>
-                <dd v-else>{{value}}</dd>
+                <!-- 逻辑关系 else 形式必须和 if 保持一致-->
+                <dd v-else>{{ value }}</dd>                
               </dl>
+            </section>
+            <section v-show="selectedTab === 'Comments'">
+              <ul class ="list-group">
+                <li class ="list-group-item">Comment 1</li>
+                <li class ="list-group-item">Comment 2</li>
+              </ul>
+              <form @submit="commentSubmit">
+                <div class="form-group">
+                  <label for="name">Your Name</label>
+                  <!--  -->
+                  <input v-model="yourName" type="text" class="form-control" id="name">
+                </div>
+                <div>
+                  <label for="comment">Comment</label>
+                  <textarea v-model="yourComment" id="comment" class="form-control"></textarea>
+                </div>
+                <input type="submit" value="Submit">
+              </form>
             </section>
       </div>
     </div>
@@ -61,9 +97,8 @@
       <small><a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by brgfx - www.freepik.com</a></small>
     </footer>
   </div>
-
   <!-- development version, includes helpful console warnings -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="./js/app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="./js/app.js"></script>
 </body>
 </html>
